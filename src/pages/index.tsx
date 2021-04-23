@@ -8,6 +8,7 @@ import { GetStaticProps } from "next";
 import { AllEpisodes } from '../components/AllEpisodes'
 import { ptBR } from "date-fns/locale";
 import { api } from "../services/api";
+import Head from 'next/head';
 
 export type Episode = {
   id: string;
@@ -33,6 +34,9 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
   const allEpisodesList = [...latestEpisodes, ...allEpisodes]
   return (
     <div className={styles.homeContainer}>
+      <Head>
+        <title>Podcastr</title>
+      </Head>
       <LatestEpisodes latestEpisodes={latestEpisodes} allEpisodesList={allEpisodesList}/>
       <AllEpisodes allEpisodes={allEpisodes} allEpisodesList={allEpisodesList} latestEpisodes={latestEpisodes}/>
     </div>

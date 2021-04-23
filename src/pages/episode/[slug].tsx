@@ -5,10 +5,11 @@ import { api } from '../../services/api';
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { convertDurationToTimeString } from '../../utils/convertDurationToTimeString';
+import { PlayerContext } from '../../contexts/PlayerContext';
 import styles from '../../styles/pageStyles/episode.module.scss'
 import Image from 'next/image'
 import Link from 'next/link'
-import { PlayerContext } from '../../contexts/PlayerContext';
+import Head from 'next/head'
 
 export type Episode = {
   id: string;
@@ -33,6 +34,9 @@ export default function Episode({ episode }: EpisodeProps) {
   const {play} = useContext(PlayerContext)
   return (
     <div className={styles.episodeContainer}>
+      <Head>
+        <title>Podcastr | {episode.title}</title>
+      </Head>
       <div className={styles.thumbnailContainer}>
         <Link href="/">
           <button type="button">

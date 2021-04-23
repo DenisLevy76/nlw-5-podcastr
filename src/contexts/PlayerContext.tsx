@@ -23,11 +23,15 @@ interface PlayerContextData {
   isPlaying: boolean;
   hasPrevious: boolean;
   hasNext: boolean;
+  isLooping: boolean;
+  isShuffle: boolean;
   play: (episode: Episode) => void;
   playNext: () => void;
   playPrevious: () => void;
   playList:(list: Episode[], index: number) => void;
   togglePlay: () => void;
+  toggleLoop: () => void;
+  toggleShuffle: () => void;
   setPlayingState: (state: boolean) => void;
 }
 
@@ -37,9 +41,10 @@ export const PlayerContextProvider: React.FC = ({children}) => {
   const [episodeList, setEpisodeList] = useState([]);
   const [currentEpisodeIndex, setCurrentEpisodeIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const hasPrevious = currentEpisodeIndex < episodeList.length;
+  const [isLooping, setIsLooping] = useState(false);
+  const [isShuffle, setIsShuffle] = useState(false);
+  const hasPrevious = currentEpisodeIndex < episodeList.length - 1;
   const hasNext = currentEpisodeIndex > 0;
-
 
   function play(episode : Episode){
     setEpisodeList( () => [episode]);
@@ -53,16 +58,43 @@ export const PlayerContextProvider: React.FC = ({children}) => {
     setIsPlaying(true);
   }
 
-  function playNext(){
-    if (hasNext) setCurrentEpisodeIndex(currentEpisodeIndex - 1)
+  function playNext(){    
+    if (hasNext) {
+      if (isShuffle){
+        const nextRandomIndex = Math.floor(Math.random() * episodeList.length)
+        setCurrentEpisodeIndex(nextRandomIndex)
+
+
+      }else{
+        setCurrentEpisodeIndex(currentEpisodeIndex - 1)
+      }
+    }
+    
   }
   
   function playPrevious(){
-    if (hasPrevious) setCurrentEpisodeIndex(currentEpisodeIndex + 1)
+    
+    if (isShuffle){
+      const nextRandomIndex = Math.floor(Math.random() * episodeList.length)
+      setCurrentEpisodeIndex(nextRandomIndex)
+      
+    } 
+    else if (hasPrevious){
+      setCurrentEpisodeIndex(currentEpisodeIndex + 1)
+    }
   }
 
   function togglePlay(){
     setIsPlaying(c => !c);
+  }
+  
+  function toggleLoop(){
+    setIsLooping(c => !c);
+  }
+
+  function toggleShuffle(){
+    setIsShuffle(c => !c);
+
   }
 
   function setPlayingState(state:boolean) {
@@ -76,11 +108,15 @@ export const PlayerContextProvider: React.FC = ({children}) => {
       isPlaying,
       hasPrevious,
       hasNext,
+      isLooping,
+      isShuffle,
       playNext,
       playPrevious,
       play,
       playList,
       togglePlay,
+      toggleLoop,
+      toggleShuffle,
       setPlayingState
     }}>
       {children}

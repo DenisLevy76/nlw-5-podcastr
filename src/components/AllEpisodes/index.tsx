@@ -1,10 +1,10 @@
 import React, {ReactNode, useContext} from 'react';
+import { PlayerContext } from '../../contexts/PlayerContext';
+import styles from './styles.module.scss';
 import Image from 'next/image'
 import Link from 'next/link'
 
 
-import styles from './styles.module.scss';
-import { PlayerContext } from '../../contexts/PlayerContext';
 
 export type Episode = {
   id: string;

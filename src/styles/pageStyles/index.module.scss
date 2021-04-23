@@ -3,4 +3,8 @@
   height: calc(100vh - 6.5rem);
 
   overflow-y: scroll;
+
+  &::-webkit-scrollbar-button{
+    opacity: 0;
+  }
 }
