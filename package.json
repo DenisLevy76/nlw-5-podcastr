@@ -15,12 +15,20 @@
     "rc-slider": "^9.7.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "sass": "^1.32.11"
+    "sass": "^1.32.11",
+    "typescript": "^4.2.4"
   },
   "devDependencies": {
     "@types/node": "^14.14.41",
     "@types/react": "^17.0.3",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
+    "eslint": "^7.24.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-react": "^7.23.2",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "json-server": "^0.16.3",
-    "typescript": "^4.2.4"
+    "prettier": "^2.2.1"
   }
 }

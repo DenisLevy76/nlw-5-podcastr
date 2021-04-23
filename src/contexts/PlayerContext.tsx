@@ -1,6 +1,4 @@
-import React, { createContext, useState } from 'react';
-
-// import { Container } from './styles';
+import React, { createContext, ReactNode, useState } from 'react';
 
 interface Episode {
   title: string;
@@ -12,18 +10,25 @@ interface Episode {
   }
 }
 
-interface PlayerContexData {
+interface PlayerContextData {
   episodeList: Episode[];
   currentEpisodeIndex: number;
   isPlaying: boolean;
   play: (episode: Episode) => void;
+  playAList: (list: Episode[], index: number) => void;
+  playNext: () => void;
+  playPrevious: () => void;
   togglePlay: () => void;
   setPlayingState: (state: boolean) => void;
 }
 
-export const PlayerContext = createContext({} as PlayerContexData);
+interface PlayerContextProviderProps{
+  children: ReactNode
+}
 
-export const PlayerContextProvider: React.FC = ({children}) => {
+export const PlayerContext = createContext({} as PlayerContextData);
+
+export const PlayerContextProvider: React.FC = ({children}: PlayerContextProviderProps) => {
   const [episodeList, setEpisodeList] = useState([]);
   const [currentEpisodeIndex, setCurrentEpisodeIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false)
@@ -32,6 +37,24 @@ export const PlayerContextProvider: React.FC = ({children}) => {
     setEpisodeList( () => [episode]);
     setCurrentEpisodeIndex(0);
     setIsPlaying(true);
+  }
+
+  function playAList(list: Episode[], index: number): void{
+    setEpisodeList( () => list);
+    setCurrentEpisodeIndex(index);
+    setIsPlaying(true);
+  }
+
+  function playNext(){
+    if (currentEpisodeIndex < episodeList.length) {
+      setCurrentEpisodeIndex(c => c - 1)
+    }
+  }
+
+  function playPrevious(){
+    if(currentEpisodeIndex > 0){
+      setCurrentEpisodeIndex(c => c + 1)
+    }
   }
 
   function togglePlay(){
@@ -44,12 +67,15 @@ export const PlayerContextProvider: React.FC = ({children}) => {
 
   return (
     <PlayerContext.Provider value={{
-      episodeList, 
-      currentEpisodeIndex, 
+      episodeList,
+      currentEpisodeIndex,
       isPlaying,
       play,
+      playNext,
+      playPrevious,
       togglePlay,
-      setPlayingState
+      setPlayingState,
+      playAList
     }}>
       {children}
     </PlayerContext.Provider>

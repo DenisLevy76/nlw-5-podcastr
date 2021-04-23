@@ -9,22 +9,25 @@ import { PlayerContext } from '../../contexts/PlayerContext';
 
 type latestEpisodesProps = {
   latestEpisodes : Episode[],
+  allEpisodes : Episode[],
   children?: ReactNode,
 }
 
-export const LatestEpisodes = ({ latestEpisodes }: latestEpisodesProps) => {
-  const {play} = useContext(PlayerContext)
+export const LatestEpisodes = ({ latestEpisodes, allEpisodes }: latestEpisodesProps): JSX.Element => {
+  const {playAList} = useContext(PlayerContext)
+  const allEpisodesList = [...latestEpisodes, ...allEpisodes]
+
   return (
     <section className={styles.lastEpisodesContainer}>
         <h2>Últimos lançamentos</h2>
         <ul>
-          {latestEpisodes.map((ep) => (
+          {latestEpisodes.map((ep, index) => (
             <li key={ep.id}>
               <Image
                 className={styles.epThumbnail}
                 width={192}
                 height={192}
-                src={ep.thumbnail} 
+                src={ep.thumbnail}
                 alt="Thumbnail do podcast"
                 objectFit="cover"
               />
@@ -41,7 +44,7 @@ export const LatestEpisodes = ({ latestEpisodes }: latestEpisodesProps) => {
                 <span>{ep.file.durationAsString}</span>
               </div>
 
-              <button type="button"><img src="/play-green.svg" onClick={() => play(ep)} alt="Ouvir o podcast"/></button>
+              <button type="button"><img src="/play-green.svg" onClick={() => playAList(allEpisodesList, index)} alt="Ouvir o podcast"/></button>
             </li>)
           )}
         </ul>

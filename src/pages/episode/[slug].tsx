@@ -1,5 +1,4 @@
 import React, { useContext } from 'react'
-import {useRouter} from 'next/router'
 import { GetStaticProps, GetStaticPaths } from 'next';
 import { api } from '../../services/api';
 import { format, parseISO } from 'date-fns';
@@ -29,7 +28,7 @@ type EpisodeProps = {
   episode: Episode
 }
 
-export default function Episode({ episode }: EpisodeProps) {
+export default function Episode({ episode }: EpisodeProps): JSX.Element{
   const {play} = useContext(PlayerContext)
   return (
     <div className={styles.episodeContainer}>
@@ -70,7 +69,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
       _order: 'desc'
     }
   })
-  
+
   const paths = data.map(ep => {
     return {
       params: {
@@ -105,10 +104,10 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
     }
   }
 
-  return { 
+  return {
     props: {
       episode
     },
-    revalidate: 60 * 60 * 6, //24 hours
+    revalidate: 60 * 60 * 6, //6 hours
   }
 }

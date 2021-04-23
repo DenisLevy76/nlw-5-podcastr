@@ -28,11 +28,11 @@ type HomeProps = {
   allEpisodes: Episode[];
 }
 
-export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
+export default function Home({ latestEpisodes, allEpisodes }: HomeProps): JSX.Element {
   return (
     <div className={styles.homeContainer}>
-      <LatestEpisodes latestEpisodes={latestEpisodes}/>
-      <AllEpisodes allEpisodes={allEpisodes} />
+      <LatestEpisodes latestEpisodes={latestEpisodes} allEpisodes={allEpisodes}/>
+      <AllEpisodes latestEpisodes={latestEpisodes} allEpisodes={allEpisodes} />
     </div>
   )
 }

@@ -6,7 +6,7 @@ import ptBR from 'date-fns/locale/pt-BR'
 
 import styles from './styles.module.scss';
 
-export function Header() {
+export function Header(): JSX.Element {
   const currentDate = format(new Date(), 'EEEEEE, d MMM', {
     locale: ptBR
   })
@@ -17,10 +17,10 @@ export function Header() {
           <img src="/logo.svg" alt="logo podcastr"/>
         </a>
       </Link>
-      
+
       <p>O melhor para você</p>
 
       <span>{currentDate}</span>
     </header>
   );
-};
+}
