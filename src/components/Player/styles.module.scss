@@ -23,7 +23,6 @@
     align-self: stretch;
     &.empty{
       opacity: 0.5;
-
     }
   }
 
@@ -81,6 +80,10 @@
     border: 0;
     font-size: 0;
     outline: none;
+
+    &:disabled{
+      opacity: 0.5;
+    }
 
     &.playButton{
       height: 4rem;

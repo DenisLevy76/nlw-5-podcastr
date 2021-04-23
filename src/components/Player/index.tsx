@@ -7,16 +7,18 @@ import 'rc-slider/assets/index.css';
 import styles from './styles.module.scss';
 
 
-export function Player(): JSX.Element {
+export function Player() {
   const audioRef = useRef<HTMLAudioElement>(null)
 
   const {currentEpisodeIndex,
-    episodeList,
+    episodeList, 
     isPlaying,
+    hasPrevious,
+    hasNext,
     togglePlay,
-    setPlayingState,
     playNext,
-    playPrevious
+    playPrevious,
+    setPlayingState
   } = useContext(PlayerContext);
 
   const currentEpisode = episodeList ? episodeList[currentEpisodeIndex] : null;
@@ -51,14 +53,13 @@ export function Player(): JSX.Element {
         </div>
       )}
 
-
       <footer className={!currentEpisode? styles.empty : ''}>
         <div className={styles.progress}>
           <span>00:00</span>
           <div className={styles.slider}>
             {currentEpisode? (
-              <Slider
-                trackStyle={{ backgroundColor: '#04D361'}}
+              <Slider 
+                trackStyle={{ backgroundColor: '#04D361'}} 
                 railStyle={{backgroundColor: '#9F75FF'}}
                 handleStyle={{borderColor: '#04D361', borderWidth: 4}}
               />
@@ -82,16 +83,16 @@ export function Player(): JSX.Element {
 
         <div className={styles.buttons}>
           <button type="button" disabled={!currentEpisode}><img src="/shuffle.svg" alt="Aleatório"/></button>
-          <button type="button" disabled={!currentEpisode} onClick={playPrevious}><img src="/play-previous.svg" alt="Voltar"/></button>
-          <button
-            type="button"
-            disabled={!currentEpisode}
+          <button type="button" disabled={!currentEpisode || !hasPrevious} onClick={playPrevious}><img src="/play-previous.svg" alt="Voltar"/></button>
+          <button 
+            type="button" 
+            disabled={!currentEpisode} 
             className={styles.playButton}
             onClick={togglePlay}
           >
             {isPlaying ? <img src="/pause.svg" alt="Play"/> : <img src="/play.svg" alt="Play"/>}
           </button>
-          <button type="button" disabled={!currentEpisode} onClick={playNext}><img src="/play-next.svg" alt="Próximo"/></button>
+          <button type="button" disabled={!currentEpisode || !hasNext} onClick={playNext}><img src="/play-next.svg" alt="Próximo"/></button>
           <button type="button" disabled={!currentEpisode}><img src="/repeat.svg" alt="Loop"/></button>
         </div>
 

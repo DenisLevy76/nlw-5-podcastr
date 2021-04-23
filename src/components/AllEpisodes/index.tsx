@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {ReactNode, useContext} from 'react';
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -6,9 +6,30 @@ import Link from 'next/link'
 import styles from './styles.module.scss';
 import { PlayerContext } from '../../contexts/PlayerContext';
 
-export const AllEpisodes = (): JSX.Element => {
-  const {playAList, allEpisodes, allEpisodesList, latestEpisodes} = useContext(PlayerContext)
+export type Episode = {
+  id: string;
+  title: string;
+  members:string;
+  publishedAt: string;
+  thumbnail: string;
+  description: string;
+  file: {
+    url: string;
+    type: string;
+    duration: number;
+    durationAsString: string;
+  }
+};
 
+type allEpisodesProps = {
+  allEpisodes : Episode[],
+  latestEpisodes : Episode[],
+  allEpisodesList : Episode[],
+  children?: ReactNode,
+}
+
+export const AllEpisodes = ({allEpisodes, latestEpisodes, allEpisodesList}: allEpisodesProps) => {
+  const {playList} = useContext(PlayerContext)
   return (
     <section className={styles.allEpisodesContainer}>
       <h2>Todos os episódios</h2>
@@ -27,10 +48,10 @@ export const AllEpisodes = (): JSX.Element => {
           {allEpisodes.map((ep, index) => {
             return (<tr key={ep.id}>
               <td>
-                <Image
-                  width={120}
-                  height={120}
-                  src={ep.thumbnail}
+                <Image 
+                  width={120} 
+                  height={120} 
+                  src={ep.thumbnail} 
                   alt={ep.title}
                   objectFit='cover'
                 />
@@ -50,7 +71,7 @@ export const AllEpisodes = (): JSX.Element => {
                 <p>{ep.file.durationAsString}</p>
               </td>
               <td>
-                <button><img src="/play-green.svg" onClick={() => playAList(allEpisodesList, index + latestEpisodes.length)} alt="Ouvir podcast"/></button>
+                <button><img src="/play-green.svg" onClick={() => playList(allEpisodesList, index + latestEpisodes.length)} alt="Ouvir podcast"/></button>
               </td>
             </tr>)
           })}

@@ -1,9 +1,6 @@
-import { format, parseISO } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
-import { GetStaticProps } from 'next';
-import React, { createContext, ReactNode, useState } from 'react';
-import { api } from '../services/api';
-import { convertDurationToTimeString } from '../utils/convertDurationToTimeString';
+import React, { createContext, useState } from 'react';
+
+// import { Container } from './styles';
 
 export type Episode = {
   id: string;
@@ -24,32 +21,24 @@ interface PlayerContextData {
   episodeList: Episode[];
   currentEpisodeIndex: number;
   isPlaying: boolean;
-  latestEpisodes: Episode[];
-  allEpisodes: Episode[];
-  allEpisodesList: Episode[];
+  hasPrevious: boolean;
+  hasNext: boolean;
   play: (episode: Episode) => void;
-  playAList: (list: Episode[], index: number) => void;
   playNext: () => void;
   playPrevious: () => void;
+  playList:(list: Episode[], index: number) => void;
   togglePlay: () => void;
   setPlayingState: (state: boolean) => void;
 }
 
-interface PlayerContextProviderProps{
-  children: ReactNode;
-  latestEpisodes: Episode[];
-  allEpisodes: Episode[];
-}
-
-
 export const PlayerContext = createContext({} as PlayerContextData);
 
-export const PlayerContextProvider: React.FC = ({children, latestEpisodes, allEpisodes}: PlayerContextProviderProps) => {
-
+export const PlayerContextProvider: React.FC = ({children}) => {
   const [episodeList, setEpisodeList] = useState([]);
   const [currentEpisodeIndex, setCurrentEpisodeIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false)
-  const allEpisodesList = [...latestEpisodes, ...allEpisodes]
+  const [isPlaying, setIsPlaying] = useState(false);
+  const hasPrevious = currentEpisodeIndex < episodeList.length;
+  const hasNext = currentEpisodeIndex > 0;
 
 
   function play(episode : Episode){
@@ -58,26 +47,22 @@ export const PlayerContextProvider: React.FC = ({children, latestEpisodes, allEp
     setIsPlaying(true);
   }
 
-  function playAList(list: Episode[], index: number): void{
+  function playList(list : Episode[], index : number){
     setEpisodeList( () => list);
     setCurrentEpisodeIndex(index);
     setIsPlaying(true);
   }
 
   function playNext(){
-    if (currentEpisodeIndex < episodeList.length) {
-      setCurrentEpisodeIndex(c => c - 1)
-    }
+    if (hasNext) setCurrentEpisodeIndex(currentEpisodeIndex - 1)
   }
-
+  
   function playPrevious(){
-    if(currentEpisodeIndex > 0){
-      setCurrentEpisodeIndex(c => c + 1)
-    }
+    if (hasPrevious) setCurrentEpisodeIndex(currentEpisodeIndex + 1)
   }
 
   function togglePlay(){
-    setIsPlaying(c => !c)
+    setIsPlaying(c => !c);
   }
 
   function setPlayingState(state:boolean) {
@@ -86,59 +71,19 @@ export const PlayerContextProvider: React.FC = ({children, latestEpisodes, allEp
 
   return (
     <PlayerContext.Provider value={{
-      episodeList,
-      currentEpisodeIndex,
+      episodeList, 
+      currentEpisodeIndex, 
       isPlaying,
-      latestEpisodes,
-      allEpisodes,
-      allEpisodesList,
-      play,
+      hasPrevious,
+      hasNext,
       playNext,
       playPrevious,
+      play,
+      playList,
       togglePlay,
-      setPlayingState,
-      playAList
+      setPlayingState
     }}>
       {children}
     </PlayerContext.Provider>
   )
-}
-
-export const getStaticProps: GetStaticProps = async() => {
-  const { data } = await api.get('episodes', {
-    params: {
-      _limit: 12,
-      _sort: 'published_at',
-      _order: 'desc'
-    }
-  })
-
-  const episodes: Episode[] = data.map((episode) => {
-    return {
-      id: episode.id,
-      title: episode.title,
-      members: episode.members,
-      publishedAt: format(parseISO(episode.published_at), 'd MMM yy', {locale: ptBR}),
-      thumbnail: episode.thumbnail,
-      description: episode.description,
-      file: {
-        url: episode.file.url,
-        type: episode.file.type,
-        duration: Number(episode.file.duration),
-        durationAsString: convertDurationToTimeString(Number(episode.file.duration))
-      }
-    }
-  })
-
-  const latestEpisodes = episodes.slice(0, 2)
-  const allEpisodes = episodes.slice(2, episodes.length)
-
-
-  return {
-    props: {
-      latestEpisodes,
-      allEpisodes
-    },
-    revalidate: 60 * 60 * 12,
-  }
 }
