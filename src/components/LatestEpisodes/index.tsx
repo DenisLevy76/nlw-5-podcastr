@@ -4,17 +4,11 @@ import Link from 'next/link'
 
 
 import styles from './styles.module.scss';
-import { Episode } from '../../pages/index'
 import { PlayerContext } from '../../contexts/PlayerContext';
 
-type latestEpisodesProps = {
-  latestEpisodes : Episode[],
-  allEpisodes : Episode[],
-  children?: ReactNode,
-}
 
-export const LatestEpisodes = ({ latestEpisodes, allEpisodes }: latestEpisodesProps): JSX.Element => {
-  const {playAList} = useContext(PlayerContext)
+export const LatestEpisodes = (): JSX.Element => {
+  const {playAList, latestEpisodes, allEpisodes} = useContext(PlayerContext)
   const allEpisodesList = [...latestEpisodes, ...allEpisodes]
 
   return (

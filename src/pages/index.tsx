@@ -28,52 +28,52 @@ type HomeProps = {
   allEpisodes: Episode[];
 }
 
-export default function Home({ latestEpisodes, allEpisodes }: HomeProps): JSX.Element {
+export default function Home(): JSX.Element {
   return (
     <div className={styles.homeContainer}>
-      <LatestEpisodes latestEpisodes={latestEpisodes} allEpisodes={allEpisodes}/>
-      <AllEpisodes latestEpisodes={latestEpisodes} allEpisodes={allEpisodes} />
+      <LatestEpisodes/>
+      <AllEpisodes />
     </div>
   )
 }
 
 // SSG - renderiza o HTML do lado do servidor next de forma estática e salva em cache e esse HTML é distribuido ao publico para que não haja uma nova
 // requisição ao backend a cada novo acesso.
-export const getStaticProps: GetStaticProps = async() => {
-  const { data } = await api.get('episodes', {
-    params: {
-      _limit: 12,
-      _sort: 'published_at',
-      _order: 'desc'
-    }
-  })
+// export const getStaticProps: GetStaticProps = async() => {
+//   const { data } = await api.get('episodes', {
+//     params: {
+//       _limit: 12,
+//       _sort: 'published_at',
+//       _order: 'desc'
+//     }
+//   })
 
-  const episodes: Episode[] = data.map((episode) => {
-    return {
-      id: episode.id,
-      title: episode.title,
-      members: episode.members,
-      publishedAt: format(parseISO(episode.published_at), 'd MMM yy', {locale: ptBR}),
-      thumbnail: episode.thumbnail,
-      description: episode.description,
-      file: {
-        url: episode.file.url,
-        type: episode.file.type,
-        duration: Number(episode.file.duration),
-        durationAsString: convertDurationToTimeString(Number(episode.file.duration))
-      }
-    }
-  })
+//   const episodes: Episode[] = data.map((episode) => {
+//     return {
+//       id: episode.id,
+//       title: episode.title,
+//       members: episode.members,
+//       publishedAt: format(parseISO(episode.published_at), 'd MMM yy', {locale: ptBR}),
+//       thumbnail: episode.thumbnail,
+//       description: episode.description,
+//       file: {
+//         url: episode.file.url,
+//         type: episode.file.type,
+//         duration: Number(episode.file.duration),
+//         durationAsString: convertDurationToTimeString(Number(episode.file.duration))
+//       }
+//     }
+//   })
 
-  const latestEpisodes = episodes.slice(0, 2)
-  const allEpisodes = episodes.slice(2, episodes.length)
+//   const latestEpisodes = episodes.slice(0, 2)
+//   const allEpisodes = episodes.slice(2, episodes.length)
 
 
-  return {
-    props: {
-      latestEpisodes,
-      allEpisodes
-    },
-    revalidate: 60 * 60 * 12,
-  }
-}
+//   return {
+//     props: {
+//       latestEpisodes,
+//       allEpisodes
+//     },
+//     revalidate: 60 * 60 * 12,
+//   }
+// }

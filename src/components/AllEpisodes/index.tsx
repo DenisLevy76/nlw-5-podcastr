@@ -1,21 +1,13 @@
-import React, {ReactNode, useContext} from 'react';
+import React, {useContext} from 'react';
 import Image from 'next/image'
 import Link from 'next/link'
-import { Episode } from '../../pages/index'
 
 
 import styles from './styles.module.scss';
 import { PlayerContext } from '../../contexts/PlayerContext';
 
-type allEpisodesProps = {
-  allEpisodes : Episode[],
-  latestEpisodes : Episode[],
-  children?: ReactNode,
-}
-
-export const AllEpisodes = ({latestEpisodes, allEpisodes}: allEpisodesProps): JSX.Element => {
-  const {playAList} = useContext(PlayerContext)
-  const allEpisodesList = [...latestEpisodes, ...allEpisodes]
+export const AllEpisodes = (): JSX.Element => {
+  const {playAList, allEpisodes, allEpisodesList, latestEpisodes} = useContext(PlayerContext)
 
   return (
     <section className={styles.allEpisodesContainer}>
